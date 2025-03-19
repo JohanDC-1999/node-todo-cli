@@ -11,7 +11,7 @@ This application allows you to manage your tasks directly from the command line.
 1.  **Clone the Repository:**
 
     ```bash
-    git clone https://github.com/JohanDC-1999/node-todo-cli
+    git clone https://github.com/JohanDC-1999/node-todo-cli.git
     ```
 
 2.  **Navigate to the Project Directory:**
