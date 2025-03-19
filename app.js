@@ -61,6 +61,32 @@ async function createTask(taskData) {
     console.log("See here:" + taskData);
 }
 
+// Use this function to show a prompt on which tasks to mark as complete
+async function markTask(){
+    let tasks = await readTasks();
+    console.log(tasks);
+    const { tasksToMarkDone } = await inquirer.prompt([
+        {
+            type: 'checkbox',
+            name: 'tasksToMarkDone',
+            message: 'Choose a task to mark as complete - use arrow keys and <Space>',
+            choices: tasks.map(task => task.taskDescription) // Extract from the json and return task descriptions only
+        }
+    ])
+
+    const updatedArray = tasks.map(task => {
+        if(tasksToMarkDone.includes(task.taskDescription)){
+            return {...task, done: true} // Mark as done
+        }
+        return task;
+    });
+
+    console.log(updatedArray);
+
+    // Update the tasks by marking as done
+    await fs.writeFile(PATH_TO_TASKS, JSON.stringify(updatedArray, null, 2), 'utf-8');
+}
+
 async function main() {
     let running = true;
     // Continue running until user chooses to exit
@@ -88,6 +114,8 @@ async function main() {
             case "Add Task":
                 await getNewTaskData();
                 break;
+            case "Mark as Done":
+                await markTask();
             case "Exit":
                 running = false; 
         }

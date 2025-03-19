@@ -2,12 +2,12 @@
   {
     "id": 1,
     "taskDescription": "Clean house",
-    "completed": false
+    "done": false
   },
   {
     "id": 2,
     "taskDescription": "Buy food",
-    "completed": false
+    "done": true
   },
   {
     "id": 3,
