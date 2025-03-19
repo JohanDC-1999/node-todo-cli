@@ -1,15 +1,7 @@
-// Importing the 'fs/promises' module directly
 import fs from 'fs/promises';
-
-// Importing the 'inquirer' module
 import inquirer from 'inquirer';
 import path from 'path'
-// const inquirer = require('inquirer');
-// import inquirer from "inquirer";
-// const fs = require('fs').promises;
-// import fs from "fs/promises";
-// const fs = require('fs');
-// const path = require('path');
+
 const PATH_TO_TASKS = 'tasks.json';
 
 // Function to read tasks from the JSON file
@@ -66,14 +58,6 @@ async function getNewTaskData() {
 async function createTask(taskData) {
 
     await fs.writeFile(PATH_TO_TASKS, JSON.stringify(taskData, null, 2), 'utf8');
-   /* let taskToCreate = await createTask();
-    try {
-        const content = 'Some content!';
-        await fs.writeFile('/Users/joe/test.txt', content);
-    } catch (err) {
-        console.log(err);
-    }
-        */
     console.log("See here:" + taskData);
 }
 
