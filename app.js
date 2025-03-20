@@ -89,6 +89,10 @@ async function markTask(){ //TODO: Split into 3 functions →  promptTasksToMark
 
 async function deleteTask(){
     let tasks = await readTasks();
+    if (tasks.length === 0) {
+        console.log('No tasks yet!');
+        return;
+    }
     let { tasksToDelete } = await inquirer.prompt([
         {
             type: "checkbox",
