@@ -4,13 +4,13 @@ import path from 'path'
 
 const PATH_TO_TASKS = 'tasks.json';
 
-// Function to read tasks from the JSON file
+// TODO: Split large functions into smaller functions - each function should do only 1 task
+
+// Function to read tasks from the JSON file and return JSON Object or null if nothing to read
 async function readTasks() {
     try {
         const data = await fs.readFile(path.join(PATH_TO_TASKS), 'utf-8');
         return data ? JSON.parse(data) : null;
-        // let tasks = JSON.parse(data);
-        // // console.log(tasks[0]);
     } catch (error) {
         console.log(`Error: ${error}`);
     }
@@ -27,7 +27,6 @@ async function displayTasks() {
     console.log('\n--- Your To-Do List ---');
     tasks.forEach((task, index) => {
         const status = task.done ? '[x]' : '[ ]';
-        // console.log(task.id);
         console.log(`${index + 1}. ${status} ${task.taskDescription}`);
     });
     console.log('------------------------\n');
@@ -58,7 +57,6 @@ async function getNewTaskData() {
 
 async function createTask(taskData) {
     await fs.writeFile(PATH_TO_TASKS, JSON.stringify(taskData, null, 2), 'utf8');
-    console.log("See here:" + taskData);
 }
 
 // Use this function to show a prompt on which tasks to mark as complete
@@ -79,7 +77,7 @@ async function markTask(){ //TODO: Split into 3 functions →  promptTasksToMark
 
     const updatedArray = tasks.map(task => {
         if(tasksToMarkDone.includes(task.taskDescription)){
-            return {...task, done: true} // Mark as done
+            return {...task, done: true} // Spread operator to create new object and mark 'done' as true
         }
         return task;
     });
@@ -90,6 +88,7 @@ async function markTask(){ //TODO: Split into 3 functions →  promptTasksToMark
     await fs.writeFile(PATH_TO_TASKS, JSON.stringify(updatedArray, null, 2), 'utf-8');
 }
 
+// Function to delete specified task(s)
 async function deleteTask(){
     let tasks = await readTasks();
     if (tasks.length === 0) {
@@ -105,6 +104,7 @@ async function deleteTask(){
         }
     ]);
 
+    // Create a new array with the chosen tasks filtered out
     let newArr = tasks.filter((task) => {
         return !tasksToDelete.includes(task.taskDescription);
     });
