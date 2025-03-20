@@ -56,13 +56,12 @@ async function getNewTaskData() {
 }
 
 async function createTask(taskData) {
-
     await fs.writeFile(PATH_TO_TASKS, JSON.stringify(taskData, null, 2), 'utf8');
     console.log("See here:" + taskData);
 }
 
 // Use this function to show a prompt on which tasks to mark as complete
-async function markTask(){
+async function markTask(){ //TODO: Split into 3 functions →  promptTasksToMarkDone(tasks), updateTasksWithDoneStatus(tasks, tasksToMarkDone), saveUpdatedTasks(updatedTasks), 
     let tasks = await readTasks();
     console.log(tasks);
     const { tasksToMarkDone } = await inquirer.prompt([
@@ -85,6 +84,25 @@ async function markTask(){
 
     // Update the tasks by marking as done
     await fs.writeFile(PATH_TO_TASKS, JSON.stringify(updatedArray, null, 2), 'utf-8');
+}
+
+async function deleteTask(){
+    let tasks = await readTasks();
+    let { tasksToDelete } = await inquirer.prompt([
+        {
+            type: "checkbox",
+            name: "tasksToDelete",
+            message: "Choose which task(s) to delete - use arrow keys and space",
+            choices: tasks.map(task => task.taskDescription)
+        }
+    ]);
+
+    let newArr = tasks.filter((task) => {
+        return !tasksToDelete.includes(task.taskDescription);
+    });
+
+    await createTask(newArr);
+    console.log('Task(s) deleted')
 }
 
 async function main() {
@@ -116,6 +134,10 @@ async function main() {
                 break;
             case "Mark as Done":
                 await markTask();
+                break;
+            case "Delete Task":
+                await deleteTask();
+                break;
             case "Exit":
                 running = false; 
         }
