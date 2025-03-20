@@ -44,7 +44,8 @@ async function getNewTaskData() {
   
     if (taskDescription) {
         const tasks = await readTasks();
-        tasks.push({id: tasks[tasks.length-1].id + 1, taskDescription: taskDescription, done: false });
+        let taskId = tasks.length > 0 ? tasks[tasks.length-1].id : 1;
+        tasks.push({id: taskId, taskDescription: taskDescription, done: false });
         await createTask(tasks);
         console.log('Task added successfully!');
     } else {
