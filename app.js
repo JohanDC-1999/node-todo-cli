@@ -8,7 +8,7 @@ const PATH_TO_TASKS = 'tasks.json';
 async function readTasks() {
     try {
         const data = await fs.readFile(path.join(PATH_TO_TASKS), 'utf-8');
-        return JSON.parse(data);
+        return data ? JSON.parse(data) : null;
         // let tasks = JSON.parse(data);
         // // console.log(tasks[0]);
     } catch (error) {
@@ -20,7 +20,7 @@ async function readTasks() {
 // Print the tasks to the console
 async function displayTasks() {
     const tasks = await readTasks();
-    if (tasks.length === 0) {
+    if (!tasks || tasks.length === 0) {
         console.log('No tasks yet!');
         return;
     }
@@ -43,8 +43,8 @@ async function getNewTaskData() {
     ]);
   
     if (taskDescription) {
-        const tasks = await readTasks();
-        let taskId = tasks.length > 0 ? tasks[tasks.length-1].id : 1;
+        const tasks = await readTasks() ?? []; // If array is null (does not exist) set to empty array
+        let taskId = tasks.length > 0 ? tasks[tasks.length-1].id + 1 : 1;
         tasks.push({id: taskId, taskDescription: taskDescription, done: false });
         await createTask(tasks);
         console.log('Task added successfully!');
@@ -63,8 +63,11 @@ async function createTask(taskData) {
 
 // Use this function to show a prompt on which tasks to mark as complete
 async function markTask(){ //TODO: Split into 3 functions →  promptTasksToMarkDone(tasks), updateTasksWithDoneStatus(tasks, tasksToMarkDone), saveUpdatedTasks(updatedTasks), 
-    let tasks = await readTasks();
-    console.log(tasks);
+    let tasks = await readTasks() ?? [];
+    if(!tasks || tasks.length == 0){
+        console.log("No tasks yet!");
+        return;
+    }
     const { tasksToMarkDone } = await inquirer.prompt([
         {
             type: 'checkbox',
